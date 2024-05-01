@@ -1,0 +1,61 @@
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+
+def scrape_linkedin_profiles(driver, profile_urls):
+    profiles_data = []
+
+    for url in profile_urls:
+        driver.get(url)
+        time.sleep(5)  # Add some delay to ensure page is fully loaded
+
+        try:
+            # Scrape profile information
+            name = driver.find_element(By.TAG_NAME, "h1").text
+            # Add more scraping logic as needed
+            
+            profile_data = {
+                "name": name,
+                # Add more profile data fields here
+            }
+
+            profiles_data.append(profile_data)
+        except Exception as e:
+            print(f"Error scraping profile at {url}: {e}")
+
+    return profiles_data
+
+def main():
+    # Profile URLs to scrape
+    profile_urls = [
+        "https://www.linkedin.com/in/profile1",
+        "https://www.linkedin.com/in/profile2",
+        # Add more profile URLs here
+    ]
+
+    # Chrome options
+    chrome_options = webdriver.ChromeOptions()
+    #chrome_options.add_argument("--headless")  # Run in headless mode (without opening browser window)
+
+    # Path to the Chrome driver executable
+    #chrome_driver_path = "/Users/shivoy/work/bin/chromedriver_mac_arm64"
+
+    # Initialize Chrome service
+    #service = Service(executable_path=chrome_driver_path)
+
+    # Start the Chrome driver with service and options
+    driver = webdriver.Chrome(options=chrome_options)
+
+    # Scrape profiles
+    profiles_data = scrape_linkedin_profiles(driver, profile_urls)
+
+    # Print scraped data
+    for profile_data in profiles_data:
+        print(profile_data)
+
+    # Close the driver
+    driver.quit()
+
+if __name__ == "__main__":
+    main()
